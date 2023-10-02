@@ -18,12 +18,12 @@ namespace transport {
         settings_ = settings;
     }
 
-    void TransportRouter::SetGraph(Graph&& graph) {
+    void TransportRouter::SetGraph(const Graph graph) {
         graph_ = std::move(graph);
         router_ = std::make_unique<graph::Router<double>>(graph_);
     }
 
-    void TransportRouter::SetStopByIds(StopById&& stop_ids) {
+    void TransportRouter::SetStopByIds(const StopById stop_ids) {
         stop_ids_ = std::move(stop_ids);
     }
 

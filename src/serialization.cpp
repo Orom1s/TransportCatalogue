@@ -247,8 +247,8 @@ void DeserializeRouter(transport::TransportRouter& router ,const proto_transport
     StopById stop_ids = DeserializeStopById(proto_tc);
     Graph graph = DeserializeGraph(proto_tc);
     router.SetRoutingSettings(settings);
-    router.SetStopByIds(std::move(stop_ids));
-    router.SetGraph(std::move(graph));
+    router.SetStopByIds(stop_ids);
+    router.SetGraph(graph);
 }
 
 transport::RoutingSettings DeserializeRoutingSettings(const proto_transport::TransportCatalogue& proto_tc) {
@@ -271,13 +271,12 @@ Graph DeserializeGraph(const proto_transport::TransportCatalogue& proto_tc) {
     std::vector<graph::Edge<double>> edges(proto_graph.edges_size());
     std::vector<std::vector<graph::EdgeId>> incidence_list(proto_graph.vertexes_size());
     for (int i = 0; i < proto_graph.edges_size(); ++i) {
-        graph::Edge<double> edge;
-        edge.name = proto_graph.edges(i).name();
-        edge.quality = proto_graph.edges(i).quality();
-        edge.from = proto_graph.edges(i).from();
-        edge.to = proto_graph.edges(i).to();
-        edge.weight = proto_graph.edges(i).weight();
-        edges[i] = std::move(edge);
+        const proto_graph::Edge& proto_edge = proto_graph.edges(i);
+        edges[i] = { proto_edge.name(),
+                     static_cast<size_t>(proto_edge.quality()),
+                     static_cast<size_t>(proto_edge.from()),
+                     static_cast<size_t>(proto_edge.to()),
+                     proto_edge.weight() };
         
     }
     for (size_t i = 0; i < incidence_list.size(); ++i) {
@@ -287,8 +286,8 @@ Graph DeserializeGraph(const proto_transport::TransportCatalogue& proto_tc) {
             incidence_list[i].push_back(id);
         }
     }
-    graph.SetEdges(std::move(edges));
-    graph.SetIncidence(std::move(incidence_list));
+    graph.SetEdges(edges);
+    graph.SetIncidence(incidence_list);
     return graph;
 }
 
