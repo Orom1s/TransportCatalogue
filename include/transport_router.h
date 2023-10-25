@@ -32,8 +32,8 @@ namespace transport {
 
         const Route FindRoute(const std::string_view stop_from, const std::string_view stop_to) const;
         void SetRoutingSettings(const RoutingSettings& settings);
-        void SetGraph(const Graph graph);
-        void SetStopByIds(const StopById stop_ids);
+        void SetGraph(Graph graph);
+        void SetStopByIds(StopById stop_ids);
     private:
         void FillGraphByStop(const std::map<std::string_view, const Stop*>& stops, Graph& stops_graph);
         void FillGraphByBus(const std::map<std::string_view, const Bus*>& buses, Graph& stops_graph);

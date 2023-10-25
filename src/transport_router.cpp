@@ -4,12 +4,12 @@ namespace transport {
 
     const TransportRouter::Route TransportRouter::FindRoute(const std::string_view stop_from, const std::string_view stop_to) const {
         const auto& routing = router_->BuildRoute(stop_ids_.at(std::string(stop_from)), stop_ids_.at(std::string(stop_to)));
-        Route route_by_id(std::nullopt);
         if (!routing) {
             return std::nullopt;
         }
+        Route route_by_id(std::nullopt);
         for (const auto id : routing.value().edges) {
-            route_by_id.value().push_back(graph_.GetEdge(id));
+            route_by_id->push_back(graph_.GetEdge(id));
         }
         return route_by_id;
     }
@@ -18,12 +18,12 @@ namespace transport {
         settings_ = settings;
     }
 
-    void TransportRouter::SetGraph(const Graph graph) {
+    void TransportRouter::SetGraph(Graph graph) {
         graph_ = std::move(graph);
         router_ = std::make_unique<graph::Router<double>>(graph_);
     }
 
-    void TransportRouter::SetStopByIds(const StopById stop_ids) {
+    void TransportRouter::SetStopByIds(StopById stop_ids) {
         stop_ids_ = std::move(stop_ids);
     }
 

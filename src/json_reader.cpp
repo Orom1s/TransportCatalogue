@@ -290,7 +290,7 @@ const json::Node JsonReader::PrintRouting(const json::Dict& request_map, Request
             }
         }
         result = json::Builder{}
-                    .StartDict()
+                    .StartDict( )
                         .Key("request_id").Value(id)
                         .Key("total_time").Value(total_time)
                         .Key("items").Value(items)

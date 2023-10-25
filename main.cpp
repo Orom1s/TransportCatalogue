@@ -34,13 +34,14 @@ int main(int argc, char* argv[]) {
         if (fout.is_open()) {
             serialization::Serialize(catalogue, renderer, router, fout);
         }
+        fout.close();
     } else if (mode == "process_requests"sv) {
         JsonReader json_input(std::cin);
         std::ifstream db_file(json_input.GetSerializationSettings().AsDict().at("file"s).AsString(), std::ios::binary);
         if (db_file) {
             auto [catalogue, renderer, router] = serialization::Deserialize(db_file);
             const auto& stat_requests = json_input.GetStatRequests();
-            RequestHandler rh = { catalogue, renderer, router };
+            RequestHandler rh{ catalogue, renderer, router };
 
             json_input.ProcessRequests(stat_requests, rh);
         }

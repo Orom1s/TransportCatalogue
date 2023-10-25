@@ -31,7 +31,7 @@ std::tuple<transport::Catalogue, renderer::MapRenderer, transport::TransportRout
     renderer::MapRenderer renderer = DeserializeRenderSettings(render_settings, proto_tc);
     transport::TransportRouter router;
     DeserializeRouter(router, proto_tc);
-	return { std::move(tc), std::move(renderer), std::move(router) };
+	return std::make_tuple< transport::Catalogue, renderer::MapRenderer, transport::TransportRouter> ( std::move(tc), std::move(renderer), std::move(router) );
 }
 
 
@@ -270,7 +270,7 @@ Graph DeserializeGraph(const proto_transport::TransportCatalogue& proto_tc) {
     graph::DirectedWeightedGraph<double> graph;
     std::vector<graph::Edge<double>> edges(proto_graph.edges_size());
     std::vector<std::vector<graph::EdgeId>> incidence_list(proto_graph.vertexes_size());
-    for (int i = 0; i < proto_graph.edges_size(); ++i) {
+    for (int i = 0; i < edges.size(); ++i) {
         const proto_graph::Edge& proto_edge = proto_graph.edges(i);
         edges[i] = { proto_edge.name(),
                      static_cast<size_t>(proto_edge.quality()),
