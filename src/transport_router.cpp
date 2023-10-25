@@ -18,7 +18,7 @@ namespace transport {
         settings_ = settings;
     }
 
-    void TransportRouter::SetGraph(Graph graph) {
+    void TransportRouter::SetGraph(Graph&& graph) {
         graph_ = std::move(graph);
         router_ = std::make_unique<graph::Router<double>>(graph_);
     }

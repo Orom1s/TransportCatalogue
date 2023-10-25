@@ -248,7 +248,7 @@ void DeserializeRouter(transport::TransportRouter& router ,const proto_transport
     Graph graph = DeserializeGraph(proto_tc);
     router.SetRoutingSettings(settings);
     router.SetStopByIds(stop_ids);
-    router.SetGraph(graph);
+    router.SetGraph(std::move(graph));
 }
 
 transport::RoutingSettings DeserializeRoutingSettings(const proto_transport::TransportCatalogue& proto_tc) {
