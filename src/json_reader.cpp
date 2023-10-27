@@ -248,6 +248,7 @@ const json::Node JsonReader::PrintMap(const json::Dict& request_map, RequestHand
 }
 
 const json::Node JsonReader::PrintRouting(const json::Dict& request_map, RequestHandler& rh) const {
+    using namespace std::string_literals;
     json::Node result;
     const int id = request_map.at("id").AsInt();
     const std::string_view stop_from = request_map.at("from").AsString();
@@ -272,7 +273,7 @@ const json::Node JsonReader::PrintRouting(const json::Dict& request_map, Request
                                                         .StartDict()
                                                             .Key("stop_name").Value(edge.name)
                                                             .Key("time").Value(edge.weight)
-                                                            .Key("type").Value("Wait")
+                                                            .Key("type").Value("Wait"s)
                                                         .EndDict()
                                                     .Build()));
                 total_time += edge.weight;
@@ -283,7 +284,7 @@ const json::Node JsonReader::PrintRouting(const json::Dict& request_map, Request
                                                         .Key("bus").Value(edge.name)
                                                         .Key("span_count").Value(static_cast<int>(edge.quality))
                                                         .Key("time").Value(edge.weight)
-                                                        .Key("type").Value("Bus")
+                                                        .Key("type").Value("Bus"s)
                                                     .EndDict()
                                                 .Build()));
                 total_time += edge.weight;

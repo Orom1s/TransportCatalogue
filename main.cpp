@@ -39,7 +39,10 @@ int main(int argc, char* argv[]) {
         JsonReader json_input(std::cin);
         std::ifstream db_file(json_input.GetSerializationSettings().AsDict().at("file"s).AsString(), std::ios::binary);
         if (db_file) {
-            auto [catalogue, renderer, router] = serialization::Deserialize(db_file);
+            auto proto_tc = serialization::ParseDB(db_file);
+            auto [catalogue, renderer] = serialization::Deserialize(proto_tc);
+            auto routing_settings = serialization::DeserializeRoutingSettings(proto_tc);
+            transport::TransportRouter router{ routing_settings, catalogue };
             const auto& stat_requests = json_input.GetStatRequests();
             RequestHandler rh{ catalogue, renderer, router };
 

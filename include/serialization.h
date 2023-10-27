@@ -17,7 +17,8 @@ namespace serialization {
 	using StopById = std::map<std::string, graph::VertexId>;
 
 	void Serialize(transport::Catalogue& tc, const renderer::MapRenderer& renderer, const transport::TransportRouter& router, std::ostream& out);
-	std::tuple<transport::Catalogue, renderer::MapRenderer, transport::TransportRouter> Deserialize(std::istream& input);
+	proto_transport::TransportCatalogue ParseDB(std::istream& input);
+	std::tuple<transport::Catalogue, renderer::MapRenderer> Deserialize(const proto_transport::TransportCatalogue& proto_tc);
 
 	void SerializeStops(const transport::Catalogue& tc, proto_transport::TransportCatalogue& proto_tc);
 	void SerializeStopDistances(const transport::Catalogue& tc, proto_transport::TransportCatalogue& proto_tc);
@@ -37,7 +38,7 @@ namespace serialization {
 	renderer::MapRenderer DeserializeRenderSettings(renderer::RenderSettings& render_settings, const proto_transport::TransportCatalogue& proto_tc);
 	svg::Point DeserializePoint(const proto_svg::Point& proto_point);
 	svg::Color DeserializeColor(const proto_svg::Color& proto_color);
-	void DeserializeRouter(transport::TransportRouter& router, const proto_transport::TransportCatalogue& proto_tc);
+	transport::TransportRouter DeserializeRouter(const proto_transport::TransportCatalogue& proto_tc);
 	transport::RoutingSettings DeserializeRoutingSettings(const proto_transport::TransportCatalogue& proto_tc);
 	StopById DeserializeStopById(const proto_transport::TransportCatalogue& proto_tc);
 	Graph DeserializeGraph(const proto_transport::TransportCatalogue& proto_tc);

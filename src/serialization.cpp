@@ -17,10 +17,15 @@ void Serialize(transport::Catalogue& tc, const renderer::MapRenderer& render, co
 
 	proto_tc.SerializeToOstream(&out);
 }
-    
-std::tuple<transport::Catalogue, renderer::MapRenderer, transport::TransportRouter> Deserialize(std::istream& input) {
+
+proto_transport::TransportCatalogue ParseDB(std::istream& input) {
     proto_transport::TransportCatalogue proto_tc;
-	proto_tc.ParseFromIstream(&input);
+    proto_tc.ParseFromIstream(&input);
+    return proto_tc;
+}
+    
+std::tuple<transport::Catalogue, renderer::MapRenderer> Deserialize(const proto_transport::TransportCatalogue& proto_tc) {
+    
 
 	transport::Catalogue tc;
 
@@ -29,9 +34,7 @@ std::tuple<transport::Catalogue, renderer::MapRenderer, transport::TransportRout
 	DeserializeBuses(tc, proto_tc);
     renderer::RenderSettings render_settings;
     renderer::MapRenderer renderer = DeserializeRenderSettings(render_settings, proto_tc);
-    transport::TransportRouter router;
-    DeserializeRouter(router, proto_tc);
-	return std::make_tuple< transport::Catalogue, renderer::MapRenderer, transport::TransportRouter> ( std::move(tc), std::move(renderer), std::move(router) );
+	return { std::move(tc), std::move(renderer) };
 }
 
 
@@ -242,13 +245,16 @@ svg::Color DeserializeColor(const proto_svg::Color& proto_color) {
     throw std::runtime_error("Error deserialized color");
 }
 
-void DeserializeRouter(transport::TransportRouter& router ,const proto_transport::TransportCatalogue& proto_tc) {
+transport::TransportRouter DeserializeRouter(const proto_transport::TransportCatalogue& proto_tc) {
+    
+    transport::TransportRouter router;
     transport::RoutingSettings settings = DeserializeRoutingSettings(proto_tc);
     StopById stop_ids = DeserializeStopById(proto_tc);
     Graph graph = DeserializeGraph(proto_tc);
     router.SetRoutingSettings(settings);
     router.SetStopByIds(stop_ids);
     router.SetGraph(std::move(graph));
+    return router;
 }
 
 transport::RoutingSettings DeserializeRoutingSettings(const proto_transport::TransportCatalogue& proto_tc) {

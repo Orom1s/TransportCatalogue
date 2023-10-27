@@ -7,11 +7,12 @@ namespace transport {
         if (!routing) {
             return std::nullopt;
         }
-        Route route_by_id(std::nullopt);
+        Route route_by_id;
+        std::vector<graph::Edge<double>> route;
         for (const auto id : routing.value().edges) {
-            route_by_id->push_back(graph_.GetEdge(id));
+            route.push_back(graph_.GetEdge(id));
         }
-        return route_by_id;
+        return route_by_id = route;
     }
 
     void TransportRouter::SetRoutingSettings(const RoutingSettings& settings) {
